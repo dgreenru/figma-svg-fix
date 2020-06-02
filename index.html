@@ -1,4 +1,7 @@
 <html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js" lang="text/javascript">
+    </script>
 <script>
     function forEach(obj, callback) {
         let length, i = 0;
@@ -22,11 +25,11 @@
     }
 
     function download(data, filename, type) {
-        var file = new Blob([data], {type: type});
+        let file = new Blob([data], {type: type});
         if (window.navigator.msSaveOrOpenBlob) // IE10+
             window.navigator.msSaveOrOpenBlob(file, filename);
         else { // Others
-            var a = document.createElement("a"),
+            let a = document.createElement("a"),
                 url = URL.createObjectURL(file);
             a.href = url;
             a.download = filename;
@@ -81,36 +84,45 @@
     ];
 
     function readFile(input) {
-        let file = input.files[0];
+        let zip = new JSZip();
+        for (let f = 0; f < input.files.length; f++) {
+            let file = input.files[f];
+            let reader = new FileReader();
 
+            reader.readAsText(file);
 
-        let reader = new FileReader();
-
-        reader.readAsText(file);
-
-        reader.onload = function () {
-            let stack = [];
-            let xml = formatXml(reader.result);
-            let lines = xml.split("\n");
-            for (let i = 0; i < lines.length; i++) {
-                for (let p = 0; p < replace.length; p++) {
-                    lines[i] = lines[i].replace(replace[p][0], replace[p][1]);
+            reader.onload = function () {
+                let stack = [];
+                let xml = formatXml(reader.result);
+                let lines = xml.split("\n");
+                for (let i = 0; i < lines.length; i++) {
+                    for (let p = 0; p < replace.length; p++) {
+                        lines[i] = lines[i].replace(replace[p][0], replace[p][1]);
+                    }
+                    lines[i] = wrapMask(stack, lines[i]);
                 }
-                lines[i] = wrapMask(stack, lines[i]);
+                zip.file(file.name, lines.join('\n'));
+                if(f == input.files.length - 1) {
+                    zip.generateAsync({type:"blob"})
+                        .then(function(content) {
+                            download(content, "figma-fixed." + new Date().toISOString() + ".zip", "application/zip");
+                        });
+                }
             }
-            download(lines.join('\n'), file.name.replace(/.svg$/, '.fixed.svg'), 'text/svg');
-        };
+            reader.onerror = function () {
+                alert(reader.error);
+            };
+        }
 
-        reader.onerror = function () {
-            alert(reader.error);
-        };
+
+
+
 
     }
 
     function wrapMask(stack, line) {
         if (line.match(/mask fill/)) {
             stack.push(line.indexOf("<"));
-            console.log(line, line.match(/mask fill/));
             return '<g>' + line;
         } else if (stack.length > 0 && line.match(/<\/g>/) && line.indexOf("<") == stack[stack.length - 1]) {
             stack.pop();
@@ -120,8 +132,9 @@
         }
     }
 </script>
+</head>
 <body>
-<input type="file" onchange="readFile(this)">
+<input type="file" onchange="readFile(this)" multiple="multiple">
 </body>
 
 </html>
