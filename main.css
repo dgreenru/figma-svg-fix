@@ -16,10 +16,14 @@
 }
 
 .logo {
-    margin: 0 50%;
+    margin: 0 auto;
 }
 
 
+
+.main {
+    min-height: calc(100vh - 250px);
+}
 
 .title {
     font-weight: bold;
@@ -39,7 +43,6 @@
     height: 320px;
     border: 4px dashed #D8D8D8;
     border-radius: 24px;
-    padding-top: 86px;
 }
 
 .dnd.highlight {
@@ -48,14 +51,14 @@
 }
 
 .dnd-wrapper {
-    opacity: 0;
+    display: none;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .dnd-wrapper.active {
-    opacity: 1;
+    display: block;
 }
 
 .dnd-header {
@@ -64,10 +67,6 @@
 
 .dnd-main {
     margin: 0 auto 64px auto;
-}
-
-.dnd-footer {
-
 }
 
 .dnd-title {
@@ -108,11 +107,22 @@
     background-color: #EE8208;
 }
 
+.dnd-wrapper.page1 {
+    padding-top: 119px;
+}
+
+.dnd-wrapper.page2 {
+    padding-top: 70px;
+}
+
+.dnd-wrapper.page3 {
+    padding-top: 86px;
+}
 
 
 .footer {
-    position: absolute;
-    bottom: 66px;
+    position: relative;
+    margin: 20px 0;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -129,5 +139,13 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 150%;
+    color: #999999;
+}
+
+.made-by-link {
+
+}
+
+.made-by-link:visited {
     color: #999999;
 }
