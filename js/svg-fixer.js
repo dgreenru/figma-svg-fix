@@ -78,12 +78,14 @@ const replace = [
     [/viewBox="\([0-9]*\) \([0-9]*\) \([0-9]*\) \([0-9]*\)"/g, 'width="\3px" height="\4px"']
 ];
 
-function readFile(files, {onReady}) {
+function readFile(files, {onReady, onReaderInited}) {
     let zip = new JSZip();
     for (let f = 0; f < files.length; f++) {
+        
         let file = files[f];
         let reader = new FileReader();
         
+        onReaderInited(reader);
         reader.readAsText(file);
         
         reader.onload = function () {
@@ -97,7 +99,7 @@ function readFile(files, {onReady}) {
                 lines[i] = wrapMask(stack, lines[i]);
             }
             zip.file(file.name, lines.join('\n'));
-            if(f == files.length - 1) {
+            if(f === files.length - 1) {
                 zip.generateAsync({type:"blob"})
                    .then(function(content) {
                        onReady(() => {
@@ -105,7 +107,7 @@ function readFile(files, {onReady}) {
                        })
                    });
             }
-        }
+        };
         reader.onerror = function () {
             alert(reader.error);
         };
