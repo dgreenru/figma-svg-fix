@@ -22,7 +22,7 @@
 
 
 .main {
-    min-height: calc(100vh - 250px);
+    min-height: calc(100vh - 255px);
 }
 
 .title {
@@ -143,7 +143,7 @@
 }
 
 .made-by-link {
-
+    color: #999999;
 }
 
 .made-by-link:visited {
