@@ -71,6 +71,9 @@ class DNDControl {
                     this._readers.push(reader);
                 },
             });
+            
+            // Счетчик метрики
+            ym(64664734,'reachGoal','convert-svg')
         }
     }
     

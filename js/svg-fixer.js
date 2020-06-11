@@ -35,6 +35,8 @@ function download(data, filename, type) {
             window.URL.revokeObjectURL(url);
         }, 0);
     }
+    // Счетчик метрики
+    ym(64664734,'reachGoal','download-svg')
 }
 
 function formatXml(xml) {
@@ -111,6 +113,9 @@ function readFile(files, {onReady, onReaderInited}) {
         reader.onerror = function () {
             alert(reader.error);
         };
+    
+        // Счетчик метрики
+        ym(64664734,'reachGoal','file-count')
     }
 }
 
